@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager - Smart Keyword Organization</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="header-title">
+          <h1>Task Manager</h1>
+          <p class="subtitle">Organize & track your keywords</p>
+        </div>
+        <button class="btn-primary btn-add-task" id="btnAddTask">+ Add Task</button>
+      </div>
+    </header>
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <div class="search-container">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-input" 
+          placeholder="Search tasks or keywords..."
+          aria-label="Search tasks"
+        >
+      </div>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="todo">To Do</button>
+        <button class="filter-btn" data-filter="in-progress">In Progress</button>
+        <button class="filter-btn" data-filter="done">Done</button>
+      </div>
+      <div class="priority-filter">
+        <button class="priority-btn active" data-priority="all" aria-label="All priorities">All Priorities</button>
+        <button class="priority-btn" data-priority="high" aria-label="High priority">High</button>
+        <button class="priority-btn" data-priority="medium" aria-label="Medium priority">Medium</button>
+        <button class="priority-btn" data-priority="low" aria-label="Low priority">Low</button>
+      </div>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-label">Total:</span>
+        <span class="stat-value" id="statTotal">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">To Do:</span>
+        <span class="stat-value" id="statTodo">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">In Progress:</span>
+        <span class="stat-value" id="statProgress">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Done:</span>
+        <span class="stat-value" id="statDone">0</span>
+      </div>
+    </div>
+
+    <!-- Tasks Container -->
+    <main class="tasks-container" id="tasksContainer">
+      <!-- Tasks will be rendered here -->
+    </main>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-content">
+        <svg class="empty-state-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+        </svg>
+        <p>No tasks yet. Create one to get started!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Add/Edit Task -->
+  <div class="modal" id="taskModal">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Add New Task</h2>
+        <button class="modal-close" id="btnCloseModal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="taskForm" class="task-form">
+        <div class="form-group">
+          <label for="taskTitle">Task Title <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="taskTitle" 
+            placeholder="e.g., Research SEO Keywords"
+            required
+            aria-required="true"
+          >
+          <span class="error-message" id="errorTitle"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="taskKeywords">Keywords <span class="required">*</span></label>
+          <textarea 
+            id="taskKeywords" 
+            placeholder="Enter keywords (comma-separated)"
+            rows="3"
+            required
+            aria-required="true"
+          ></textarea>
+          <span class="error-message" id="errorKeywords"></span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="taskPriority">Priority <span class="required">*</span></label>
+            <select id="taskPriority" required aria-required="true">
+              <option value="">Select priority</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+            <span class="error-message" id="errorPriority"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="taskStatus">Status <span class="required">*</span></label>
+            <select id="taskStatus" required aria-required="true">
+              <option value="">Select status</option>
+              <option value="todo">To Do</option>
+              <option value="in-progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+            <span class="error-message" id="errorStatus"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="taskDueDate">Due Date <span class="required">*</span></label>
+          <input 
+            type="date" 
+            id="taskDueDate"
+            required
+            aria-required="true"
+          >
+          <span class="error-message" id="errorDueDate"></span>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" id="btnCancel">Cancel</button>
+          <button type="submit" class="btn-primary">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span id="toastMessage"></span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="utils.js"></script>
+  <script src="tasks.js"></script>
+  <script src="ui.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
